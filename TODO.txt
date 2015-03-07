@@ -1,0 +1,1 @@
+Getting a timeout on Hypercube (Zenhacks challenge).
