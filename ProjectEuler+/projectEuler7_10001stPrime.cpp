@@ -5,7 +5,7 @@
 #include <algorithm>
 using namespace std;
 
-bool isPrime(int n, vector<int> &primesList);
+//bool isPrime(int n, vector<int> &primesList);
 template<typename T> void printVector(vector<T> &x);
 
 
@@ -13,47 +13,41 @@ int main() {
 	int T;
 	cin >> T;
 	T = 1;
-	vector<int> primesList(1,2);
+	vector<int> primesList(10000,0);
 
+	// Initialise sieve. Its purpose is for every position to point to the next prime.
+	vector<int> sieve(105000, 0);
+	for (int i = 2; i < sieve.size()-1; ++i) {
+		sieve[i] = i+1;
+	}
+	//printVector(sieve);
+
+	// Build the sieve.
+	int iSieve = 2;
+	for (int count=1; count <= 10000; count++) {
+		int prime = iSieve;
+		for (int i = iSieve; i > 0; i = sieve[i]) {
+			if (sieve[i] % prime == 0) {
+				int pointTo = sieve[sieve[i]];
+				sieve[sieve[i]] = 0;
+				sieve[i] = pointTo;
+			}
+		}
+		iSieve = sieve[ iSieve ];
+		primesList[count-1] = prime;
+	}
 
 	for (int iTest = 0; iTest < T; ++iTest) {
 		int N;
 		cin >> N;
 		N = 10000;
-
-		// Initialise sieve. Its purpose is for every position to point to the next prime.
-		vector<int> sieve(105000, 0);
-		for (int i = 2; i < sieve.size()-1; ++i) {
-			sieve[i] = i+1;
-		}
-		//printVector(sieve);
-
-		int prime  = 2;
-		int iSieve = 2;
-		for (int count=1; count <= N; count++) {
-			prime = iSieve;
-			//cout << endl << "Prime is " << prime << endl;
-			for (int i = iSieve; i > 0; i = sieve[i]) {
-				//cout << endl << "Moving on to " << i << endl;
-				//cout << "Checking " << sieve[i] << endl;
-				if (sieve[i] % prime == 0) {
-					//cout << sieve[i] << " not prime" << endl;
-					int pointTo = sieve[sieve[i]];
-					sieve[sieve[i]] = 0;
-					sieve[i] = pointTo;
-					//cout << i << " now points to " << sieve[i] << endl;
-				}
-			}
-			iSieve = sieve[ iSieve ];
-			//printVector(sieve); //cout << endl;
-		}
-		cout << prime << endl;
+		cout << primesList[N-1] << endl;
 	}
 	return 0;
 }
 
 
-bool isPrime(int n, vector<int> &primesList)
+/*bool isPrime(int n, vector<int> &primesList)
 {
 	bool isprime = true;
 
@@ -66,12 +60,8 @@ bool isPrime(int n, vector<int> &primesList)
 		primesList.push_back(n);
 	}
 
-	// for (int i = 2; i <= bound && isprime; ++i) {
-	// 	if (n % i == 0 && n > 2) isprime = false;
-	// }
-
 	return isprime;
-}
+}*/
 
 template<typename T> void printVector(vector<T> &x)
 {
